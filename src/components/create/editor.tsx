@@ -57,7 +57,7 @@ export default function Editor() {
     content: `<p>Hello World</p>`,
     editorProps: {
       attributes: {
-        class: `focus:outline-none border-none flex flex-col pl-2 pt-4 pr-14 pb-10 cursor-text rounded-lg  text-white bg-neutral-950`,
+        class: `focus:outline-none border-none flex flex-col pl-3 pt-4 pr-14 pb-10 cursor-text rounded-lg text-white bg-neutral-950`,
       },
     },
   });

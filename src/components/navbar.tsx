@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContentContainer from "./contentContainer";
 import { navLinks } from "@/constants/links";
 import Link from "next/link";
@@ -10,11 +10,29 @@ import { UserTypes } from "@/types/clientTypes";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Navbar() {
   const [isloading, setIsLoading] = useState(false);
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const router = useRouter();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const { data } = await axios.get("/api/navbar-user-check");
+        const res: { success: boolean; message: string } = data;
+        if (!res.success) {
+          setUser(null);
+        }
+      } catch (error) {
+        setUser(null);
+        console.log(error);
+      }
+    };
+    checkToken();
+  }, []);
+
   return (
     <ContentContainer>
       <div className="flex items-center justify-between w-full py-4">
