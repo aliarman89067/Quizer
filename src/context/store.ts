@@ -36,3 +36,21 @@ export const useEditor = create<UseEditorTypes>((set) => ({
   editor: null,
   setEditor: (editor) => set({ editor: editor }),
 }));
+
+type UseInitialContentTypes = {
+  initialContent: string;
+  setInitialContent: (content: string) => void;
+};
+
+export const useInitialContent = create<UseInitialContentTypes>()(
+  persist(
+    (set) => ({
+      initialContent: "",
+      setInitialContent: (content) => set({ initialContent: content }),
+    }),
+    {
+      name: "quizer-editor-initial-content",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

@@ -280,6 +280,7 @@ div[data-radix-popper-content-wrapper] {
   z-index: 50 !important;
 }
 
+/* Custom Srollbar 1 */
 .custom-scrollbar::-webkit-scrollbar {
   height: 8px;
   width: 10px;
@@ -298,4 +299,25 @@ div[data-radix-popper-content-wrapper] {
 /* Handle on hover */
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #fff;
+}
+/* Custom Srollbar 2 */
+.custom-scrollbar2::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 100px;
+}
+
+/* Track */
+.custom-scrollbar2::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+/* Handle */
+.custom-scrollbar2::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 100px;
+}
+
+/* Handle on hover */
+.custom-scrollbar2::-webkit-scrollbar-thumb:hover {
+  background: #000;
 }
