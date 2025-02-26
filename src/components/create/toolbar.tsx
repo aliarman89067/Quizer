@@ -36,6 +36,12 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 export const Toolbar = () => {
   const { editor } = useEditor();
@@ -103,12 +109,21 @@ export const Toolbar = () => {
     isActive?: boolean;
   }) => {
     return (
-      <div
-        onClick={onClick}
-        className="flex items-center justify-center w-7 h-6 shrink-0 rounded-sm border border-white cursor-pointer"
-      >
-        <Icon className="size-4 text-white" />
-      </div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <div
+              onClick={onClick}
+              className="flex items-center justify-center w-7 h-6 shrink-0 rounded-sm border border-white cursor-pointer"
+            >
+              <Icon className="size-4 text-white" />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{label}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   };
 
@@ -127,18 +142,27 @@ export const Toolbar = () => {
 
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            style={{
-              fontFamily:
-                editor?.getAttributes("textStyle").fontFamily || "Arial",
-            }}
-            className="px-2 w-[150px] py-1 border border-white rounded-sm text-white text-sm flex items-center justify-between gap-2 whitespace-nowrap"
-          >
-            {editor?.getAttributes("textStyle").fontFamily || "Arial"}
-            <ChevronDown className="size-4" />
-          </button>
-        </DropdownMenuTrigger>
+        <TooltipProvider>
+          <Tooltip>
+            <DropdownMenuTrigger asChild>
+              <TooltipTrigger asChild>
+                <button
+                  style={{
+                    fontFamily:
+                      editor?.getAttributes("textStyle").fontFamily || "Arial",
+                  }}
+                  className="px-2 w-[150px] py-1 border border-white rounded-sm text-white text-sm flex items-center justify-between gap-2 whitespace-nowrap"
+                >
+                  {editor?.getAttributes("textStyle").fontFamily || "Arial"}
+                  <ChevronDown className="size-4" />
+                </button>
+              </TooltipTrigger>
+            </DropdownMenuTrigger>
+            <TooltipContent>
+              <p>Font Family</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <DropdownMenuContent>
           {fonts.map((item) => (
             <DropdownMenuItem
@@ -157,82 +181,91 @@ export const Toolbar = () => {
     );
   };
 
-  const HeadingLevelButton = () => {
-    const headings = [
-      {
-        label: "Normal text",
-        value: 0,
-        fontSize: "16px",
-      },
-      {
-        label: "Heading 1",
-        value: 1,
-        fontSize: "32px",
-      },
-      {
-        label: "Heading 2",
-        value: 2,
-        fontSize: "28px",
-      },
-      {
-        label: "Heading 3",
-        value: 3,
-        fontSize: "25px",
-      },
-      {
-        label: "Heading 4",
-        value: 4,
-        fontSize: "20px",
-      },
-      {
-        label: "Heading 5",
-        value: 5,
-        fontSize: "16px",
-      },
-    ];
+  // const HeadingLevelButton = () => {
+  //   const headings = [
+  //     {
+  //       label: "Normal text",
+  //       value: 0,
+  //       fontSize: "16px",
+  //     },
+  //     {
+  //       label: "Heading 1",
+  //       value: 1,
+  //       fontSize: "32px",
+  //     },
+  //     {
+  //       label: "Heading 2",
+  //       value: 2,
+  //       fontSize: "28px",
+  //     },
+  //     {
+  //       label: "Heading 3",
+  //       value: 3,
+  //       fontSize: "25px",
+  //     },
+  //     {
+  //       label: "Heading 4",
+  //       value: 4,
+  //       fontSize: "20px",
+  //     },
+  //     {
+  //       label: "Heading 5",
+  //       value: 5,
+  //       fontSize: "16px",
+  //     },
+  //   ];
 
-    const getCurrentHeading = () => {
-      for (let level = 1; level <= 5; level++) {
-        if (editor?.isActive("heading", { level })) {
-          return `Heading ${level}`;
-        }
-      }
-      return "Normal Text";
-    };
+  //   const getCurrentHeading = () => {
+  //     for (let level = 1; level <= 5; level++) {
+  //       if (editor?.isActive("heading", { level })) {
+  //         return `Heading ${level}`;
+  //       }
+  //     }
+  //     return "Normal Text";
+  //   };
 
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="px-2 py-1 border border-white rounded-sm text-sm text-white flex items-center justify-between gap-2 whitespace-nowrap">
-            {getCurrentHeading()}
-            <ChevronDown className="size-4" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="flex flex-col gap-2">
-          {headings.map((item) => (
-            <DropdownMenuItem
-              key={item.value}
-              onClick={() => {
-                if (item.value === 0) {
-                  editor?.chain().focus().setParagraph().run();
-                } else {
-                  editor
-                    ?.chain()
-                    .focus()
-                    .toggleHeading({ level: item.value as Level })
-                    .run();
-                }
-              }}
-              style={{ fontSize: item.fontSize }}
-              className="text-primary"
-            >
-              {item.label}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  };
+  //   return (
+  //     <DropdownMenu>
+  //       <TooltipProvider>
+  //         <Tooltip>
+  //           <DropdownMenuTrigger asChild>
+  //             <TooltipTrigger asChild>
+  //               <button className="px-2 py-1 border border-white rounded-sm text-sm text-white flex items-center justify-between gap-2 whitespace-nowrap">
+  //                 {getCurrentHeading()}
+  //                 <ChevronDown className="size-4" />
+  //               </button>
+  //             </TooltipTrigger>
+  //           </DropdownMenuTrigger>
+  //           <TooltipContent>
+  //             <p>Heading</p>
+  //           </TooltipContent>
+  //         </Tooltip>
+  //       </TooltipProvider>
+  //       <DropdownMenuContent className="flex flex-col gap-2">
+  //         {headings.map((item) => (
+  //           <DropdownMenuItem
+  //             key={item.value}
+  //             onClick={() => {
+  //               if (item.value === 0) {
+  //                 editor?.chain().focus().setParagraph().run();
+  //               } else {
+  //                 editor
+  //                   ?.chain()
+  //                   .focus()
+  //                   .toggleHeading({ level: item.value as Level })
+  //                   .run();
+  //               }
+  //             }}
+  //             style={{ fontSize: item.fontSize }}
+  //             className="text-primary"
+  //           >
+  //             {item.label}
+  //           </DropdownMenuItem>
+  //         ))}
+  //       </DropdownMenuContent>
+  //     </DropdownMenu>
+  //   );
+  // };
 
   const FontSizeButton = () => {
     const currentFontSize = editor?.getAttributes("textStyle").fontSize
@@ -282,12 +315,21 @@ export const Toolbar = () => {
 
     return (
       <div className="flex items-center gap-x-1">
-        <button
-          onClick={decreament}
-          className="h-7 w-7 shrink-0 flex items-center justify-center rounded-sm border border-white hover:bg-primary"
-        >
-          <MinusIcon className="size-4 text-white" />
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={decreament}
+                className="h-7 w-7 shrink-0 flex items-center justify-center rounded-sm border border-white hover:bg-primary"
+              >
+                <MinusIcon className="size-4 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Decrease</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         {isEditing ? (
           <input
             type="text"
@@ -308,12 +350,21 @@ export const Toolbar = () => {
             {currentFontSize}
           </button>
         )}
-        <button
-          onClick={increament}
-          className="h-7 w-7 shrink-0 flex items-center justify-center rounded-sm border border-white hover:bg-primary"
-        >
-          <PlusIcon className="size-4 text-white" />
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={increament}
+                className="h-7 w-7 shrink-0 flex items-center justify-center rounded-sm border border-white hover:bg-primary"
+              >
+                <PlusIcon className="size-4 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Increase</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     );
   };
@@ -349,11 +400,20 @@ export const Toolbar = () => {
     return (
       <>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm border border-white px-1.5 overflow-hidden text-sm">
-              <ImageIcon className="size-4 text-white" />
-            </button>
-          </DropdownMenuTrigger>
+          <TooltipProvider>
+            <Tooltip>
+              <DropdownMenuTrigger asChild>
+                <TooltipTrigger asChild>
+                  <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm border border-white px-1.5 overflow-hidden text-sm">
+                    <ImageIcon className="size-4 text-white" />
+                  </button>
+                </TooltipTrigger>
+              </DropdownMenuTrigger>
+              <TooltipContent>
+                <p>Image</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <DropdownMenuContent>
             <DropdownMenuItem onClick={onUpload}>
               <UploadIcon className="size-4 mr-2" />
@@ -412,7 +472,7 @@ export const Toolbar = () => {
         className="bg-gray-400 w-[1px] h-[20px]"
       />
       <FontFamilyButton />
-      <HeadingLevelButton />
+      {/* <HeadingLevelButton /> */}
       <Separator
         orientation="vertical"
         className="bg-gray-400 w-[1px] h-[20px]"
