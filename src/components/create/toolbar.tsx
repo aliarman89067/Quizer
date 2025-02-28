@@ -2,10 +2,17 @@
 
 import { useEditor } from "@/context/store";
 import {
+  AlignCenterIcon,
+  AlignJustifyIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
   BoldIcon,
   ChevronDown,
+  CodeIcon,
   ImageIcon,
   ItalicIcon,
+  ListIcon,
+  ListOrderedIcon,
   LucideIcon,
   MinusIcon,
   PlusIcon,
@@ -42,6 +49,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { cn } from "@/lib/utils";
 
 export const Toolbar = () => {
   const { editor } = useEditor();
@@ -449,6 +457,133 @@ export const Toolbar = () => {
     );
   };
 
+  const AlignButton = () => {
+    const { editor } = useEditor();
+
+    const alignments = [
+      {
+        label: "Align Left",
+        value: "left",
+        Icon: AlignLeftIcon,
+      },
+      {
+        label: "Align Center",
+        value: "center",
+        Icon: AlignCenterIcon,
+      },
+      {
+        label: "Align Right",
+        value: "right",
+        Icon: AlignRightIcon,
+      },
+    ];
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm border border-white px-1.5 overflow-hidden text-sm text-white">
+            <AlignLeftIcon className="size-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+          {alignments.map(({ label, value, Icon }) => (
+            <button
+              key={value}
+              onClick={() => editor?.chain().focus().setTextAlign(value).run()}
+              className="flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-100/80"
+            >
+              <Icon className="size-4" />
+              <span className="text-sm">{label}</span>
+            </button>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
+  const CodeButton = () => {
+    const { editor } = useEditor();
+    const handleCodeToggle = () => {
+      if (!editor) return;
+
+      if (editor.isActive("codeBlock")) {
+        editor.commands.toggleCodeBlock();
+      } else {
+        editor.commands.setCodeBlock();
+      }
+    };
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <div
+              onClick={handleCodeToggle}
+              className="flex items-center justify-center w-7 h-7 shrink-0 rounded-sm border border-white cursor-pointer"
+            >
+              <CodeIcon className="size-4 text-white" />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Code</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
+
+  const ListButton = () => {
+    const { editor } = useEditor();
+
+    const lists = [
+      {
+        label: "Bullet List",
+        Icon: ListIcon,
+        isActive: () => editor?.isActive("bulletList"),
+        onClick: () => editor?.chain().focus().toggleBulletList().run(),
+      },
+      {
+        label: "Ordered List",
+        Icon: ListOrderedIcon,
+        isActive: () => editor?.isActive("orderedList"),
+        onClick: () => editor?.chain().focus().toggleOrderedList().run(),
+      },
+    ];
+
+    return (
+      <DropdownMenu>
+        <TooltipProvider>
+          <Tooltip>
+            <DropdownMenuTrigger asChild>
+              <TooltipTrigger asChild>
+                <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm border border-white px-1.5 overflow-hidden text-sm">
+                  <ListIcon className="size-4 text-white" />
+                </button>
+              </TooltipTrigger>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+              {lists.map(({ label, Icon, onClick, isActive }) => (
+                <button
+                  key={label}
+                  onClick={onClick}
+                  className={cn(
+                    "flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-100/80",
+                    isActive() && "bg-neutral-200/80"
+                  )}
+                >
+                  <Icon className="size-4" />
+                  <span className="text-sm">{label}</span>
+                </button>
+              ))}
+            </DropdownMenuContent>
+            <TooltipContent>
+              <p>Lists</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </DropdownMenu>
+    );
+  };
+
   return (
     <div className="flex items-center justify-start gap-3 border-b border-gray-400 py-2 px-3 overflow-x-scroll xl:overflow-x-hidden custom-scrollbar overflow-y-hidden">
       {sections[0].map((item, index) => (
@@ -465,8 +600,9 @@ export const Toolbar = () => {
         orientation="vertical"
         className="bg-gray-400 w-[1px] h-[20px]"
       />
+      <TextColorButton />
+      <AlignButton />
       <FontSizeButton />
-
       <Separator
         orientation="vertical"
         className="bg-gray-400 w-[1px] h-[20px]"
@@ -477,7 +613,16 @@ export const Toolbar = () => {
         orientation="vertical"
         className="bg-gray-400 w-[1px] h-[20px]"
       />
-      <TextColorButton />
+      <ListButton />
+      <Separator
+        orientation="vertical"
+        className="bg-gray-400 w-[1px] h-[20px]"
+      />
+      <CodeButton />
+      <Separator
+        orientation="vertical"
+        className="bg-gray-400 w-[1px] h-[20px]"
+      />
       <HighLightColorButton />
       <Separator
         orientation="vertical"

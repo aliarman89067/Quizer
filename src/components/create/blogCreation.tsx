@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Toolbar } from "./toolbar";
 import Editor from "./editor";
 import BlogDetails from "./BlogDetails";
+import QuizCreation from "./QuizCreation";
 
 export default function BlogCreation() {
   const [step, setStep] = useState(0);
@@ -17,6 +18,7 @@ export default function BlogCreation() {
           </div>
         </div>
       )}
+      {step === 2 && <QuizCreation />}
     </>
   );
 }

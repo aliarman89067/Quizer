@@ -28,7 +28,7 @@ export const TextColorButton = () => {
       <TooltipProvider>
         <Tooltip>
           <DropdownMenuTrigger asChild>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm border border-white px-1.5 overflow-hidden text-sm">
                 <span className="text-sm text-white">A</span>
                 <div

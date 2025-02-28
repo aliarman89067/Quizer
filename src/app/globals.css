@@ -251,6 +251,18 @@ body {
       @apply hover:underline;
     }
   }
+  pre {
+    background: #03071e;
+    font-family: "monospace";
+    padding: 0px 1rem;
+
+    code {
+      color: inherit;
+      font-size: 0.85rem;
+      padding: 0;
+      white-space: pre-wrap;
+    }
+  }
 }
 
 /* For mobile */

@@ -34,7 +34,7 @@ export default function UserButton() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={user.imageUrl} />
+          <AvatarImage src={user.imageUrl || ""} />
           <AvatarFallback>{user.name.substring(1)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

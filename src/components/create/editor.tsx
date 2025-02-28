@@ -4,10 +4,6 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
-import {
-  useEditor as useEditorStore,
-  useInitialContent,
-} from "@/context/store";
 import History from "@tiptap/extension-history";
 import FontFamily from "@tiptap/extension-font-family";
 import { FontSizeExtension } from "@/extensions/font-size";
@@ -18,6 +14,13 @@ import Image from "@tiptap/extension-image";
 import ImageResize from "tiptap-extension-resize-image";
 import { Button } from "../ui/button";
 import { Dispatch, SetStateAction } from "react";
+import TextAlign from "@tiptap/extension-text-align";
+import Code from "@tiptap/extension-code";
+import { CodeBlock } from "@tiptap/extension-code-block";
+import {
+  useEditor as useEditorStore,
+  useInitialContent,
+} from "@/context/store";
 
 interface EditorProps {
   step: number;
@@ -75,8 +78,14 @@ export default function Editor({ step, setStep }: EditorProps) {
       Heading,
       Image,
       ImageResize,
+      CodeBlock.configure({
+        defaultLanguage: "plaintext",
+      }),
       Highlight.configure({
         multicolor: true,
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
       }),
     ],
     content: initialContent,
